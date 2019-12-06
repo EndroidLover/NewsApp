@@ -1,6 +1,8 @@
 package com.rohit.android.newsapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
         final News currentNews = getItem(position);
         TextView title = (TextView)listview.findViewById(R.id.title);
         title.setText(currentNews.getTitle());
+
 
         TextView date = listview.findViewById(R.id.date);
         date.setText(currentNews.getUrl());

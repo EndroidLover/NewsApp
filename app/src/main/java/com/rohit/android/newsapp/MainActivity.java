@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.renderscript.ScriptGroup;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +34,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
     public NewsAdapter madapter;
     public static Context context;
     @Override
@@ -81,6 +84,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+       setupPreference();
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if(s.equals("bold")){
+            LinearLayout bla = findViewById(R.id.linear);
+            if(sharedPreferences.getBoolean(s,true)){
+            bla.setBackgroundColor(getResources().getColor(R.color.blue));}
+        }
     }
 
     public class fetchdata extends AsyncTask<String,Void,ArrayList<News>>{
@@ -113,5 +127,22 @@ public class MainActivity extends AppCompatActivity {
             startActivity(actionSettingsIntent);}
             return true;
 
+    }
+
+    public void setupPreference(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        if(sharedPreferences.getBoolean("bold",true)){
+            LinearLayout bla = findViewById(R.id.linear);
+            bla.setBackgroundColor(getResources().getColor(R.color.blue));
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 }
